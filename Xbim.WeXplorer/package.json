@@ -19,5 +19,9 @@
   ],
   "scripts": {
     "jsdoc": "jsdoc -c jsdoc.config.json"
+  },
+  "dependencies": {
+    "ts-loader": "^2.3.2",
+    "typescript": "^2.4.2"
   }
 }

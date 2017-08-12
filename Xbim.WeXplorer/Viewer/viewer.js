@@ -1202,7 +1202,6 @@ var Viewer = (function () {
         if (this.renderingMode == RenderingMode.XRAY) {
             //two passes - first one for non-transparent objects, second one for all the others
             gl.disable(gl.CULL_FACE);
-            gl.depthMask(false);
             this._handles.forEach(function (handle) {
                 if (!handle.stopped) {
                     handle.setActive(_this._pointers);
@@ -1217,7 +1216,6 @@ var Viewer = (function () {
                     handle.draw('transparent');
                 }
             });
-            gl.depthMask(true);
         }
         else {
             gl.disable(gl.CULL_FACE);
