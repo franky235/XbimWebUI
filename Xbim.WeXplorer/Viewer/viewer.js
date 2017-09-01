@@ -33,8 +33,9 @@ var Viewer = (function () {
     * certain kinds of user interaction. This means that it won't work with obsolete and non-standard-compliant browsers like IE10 and less.
     *
     * @param {string | HTMLCanvasElement} canvas - string ID of the canvas or HTML canvas element.
+    * @param WebGLAttribs - Webgl context attributes if any.
     */
-    function Viewer(canvas) {
+    function Viewer(canvas, WebGLAttribs) {
         this._lastActiveHandlesCount = 0;
         if (typeof (canvas) == 'undefined') {
             throw 'Canvas has to be defined';
@@ -143,7 +144,7 @@ var Viewer = (function () {
         */
         this._clippingPlaneB = [0, 0, 0, 0];
         //*************************** Do all the set up of WebGL **************************
-        var gl = webgl_utils_1.WebGLUtils.setupWebGL(this._canvas);
+        var gl = webgl_utils_1.WebGLUtils.setupWebGL(this._canvas, WebGLAttribs);
         //do not even initialize this object if WebGL is not supported
         if (!gl) {
             return;

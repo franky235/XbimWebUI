@@ -16,8 +16,9 @@ export declare class Viewer {
     * certain kinds of user interaction. This means that it won't work with obsolete and non-standard-compliant browsers like IE10 and less.
     *
     * @param {string | HTMLCanvasElement} canvas - string ID of the canvas or HTML canvas element.
+    * @param WebGLAttribs - Webgl context attributes if any.
     */
-    constructor(canvas: string | HTMLCanvasElement);
+    constructor(canvas: string | HTMLCanvasElement, WebGLAttribs?: any);
     _canvas: HTMLCanvasElement;
     perspectiveCamera: {
         fov: number;

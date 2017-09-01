@@ -31,8 +31,9 @@ export class Viewer {
     * certain kinds of user interaction. This means that it won't work with obsolete and non-standard-compliant browsers like IE10 and less.
     *
     * @param {string | HTMLCanvasElement} canvas - string ID of the canvas or HTML canvas element.
+    * @param WebGLAttribs - Webgl context attributes if any.
     */
-    constructor(canvas: string | HTMLCanvasElement) {
+    constructor(canvas: string | HTMLCanvasElement, WebGLAttribs?: any) {
         if (typeof (canvas) == 'undefined') {
             throw 'Canvas has to be defined';
         }
@@ -150,7 +151,7 @@ export class Viewer {
 
 
         //*************************** Do all the set up of WebGL **************************
-        var gl = WebGLUtils.setupWebGL(this._canvas);
+        var gl = WebGLUtils.setupWebGL(this._canvas, WebGLAttribs);
 
         //do not even initialize this object if WebGL is not supported
         if (!gl) {
