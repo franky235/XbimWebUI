@@ -176,7 +176,7 @@ var Viewer = (function () {
         this._lastStates = {};
         this._visualStateAttributes = [
             'perspectiveCamera', 'orthogonalCamera', 'camera', 'background', 'lightA', 'lightB',
-            'renderingMode', '_clippingA', '_clippingB', 'mvMatrix', '_pMatrix', '_distance', '_origin', 'highlightingColour',
+            'renderingMode', '_clippingPlaneA', '_clippingPlaneB', 'mvMatrix', '_pMatrix', '_distance', '_origin', 'highlightingColour',
             '_numberOfActiveModels', "_width", "_height"
         ];
         this._stylingChanged = true;
