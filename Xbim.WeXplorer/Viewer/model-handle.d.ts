@@ -17,6 +17,7 @@ export declare class ModelHandle {
     private _normalBuffer;
     private _indexBuffer;
     private _productBuffer;
+    private _modelIdBuffer;
     private _styleBuffer;
     private _stateBuffer;
     private _transformationBuffer;
@@ -27,6 +28,8 @@ export declare class ModelHandle {
      * Static counter to keep unique ID of the model handles
      */
     private static _instancesNum;
+    static readonly instancesNum: number;
+    static resetInstancesNum(): void;
     setActive(pointers: ModelPointers): void;
     draw(mode?: 'solid' | 'transparent'): void;
     drawProduct(id: number): void;

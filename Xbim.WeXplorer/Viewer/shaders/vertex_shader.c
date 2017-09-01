@@ -2,6 +2,8 @@ attribute highp float aVertexIndex;
 attribute highp float aTransformationIndex;
 attribute highp float aStyleIndex;
 attribute highp float aProduct;
+attribute highp float aModelId;
+
 attribute highp vec2 aState;
 attribute highp vec2 aNormal;
 
@@ -67,7 +69,7 @@ vec4 getIdColor() {
 	float B = floor(product / (256.0*256.0));
 	float G = floor((product - B * 256.0*256.0) / 256.0);
 	float R = mod(product, 256.0);
-	return vec4(R / 255.0, G / 255.0, B / 255.0, 1.0);
+	return vec4(R / 255.0, G / 255.0, B / 255.0, aModelId / 255.0);
 }
 
 vec2 getTextureCoordinates(int index, int size)

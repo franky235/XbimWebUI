@@ -1,3 +1,4 @@
+"use strict";
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,7 +18,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE. */
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("./common");
 var mat4 = (function () {
@@ -1416,17 +1416,17 @@ var mat4 = (function () {
             Math.abs(a15 - b15) <= common_1.glMatrix.EPSILON * Math.max(1.0, Math.abs(a15), Math.abs(b15)));
     };
     ;
+    /**
+     * Alias for {@link mat4.multiply}
+     * @function
+     */
+    mat4.mul = mat4.multiply;
+    /**
+     * Alias for {@link mat4.subtract}
+     * @function
+     */
+    mat4.sub = mat4.subtract;
     return mat4;
 }());
-/**
- * Alias for {@link mat4.multiply}
- * @function
- */
-mat4.mul = mat4.multiply;
-/**
- * Alias for {@link mat4.subtract}
- * @function
- */
-mat4.sub = mat4.subtract;
 exports.mat4 = mat4;
 //# sourceMappingURL=mat4.js.map

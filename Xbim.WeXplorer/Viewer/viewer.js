@@ -222,6 +222,13 @@ var Viewer = (function () {
         model_handle_1.ModelHandle.bufferTexture(gl, this._stateStyleTexture, this._stateStyles);
     }
     /**
+    * reset ModelHandle._instancesNum when necessary
+    * @function Viewer.resetInstancesNum
+    */
+    Viewer.prototype.resetInstancesNum = function () {
+        model_handle_1.ModelHandle.resetInstancesNum();
+    };
+    /**
     * This is a static function which should always be called before Viewer is instantiated.
     * It will check all prerequisites of the viewer and will report all issues. If Prerequisities.errors contain
     * any messages viewer won't work. If Prerequisities.warnings contain any messages it will work but some
@@ -358,9 +365,16 @@ var Viewer = (function () {
     Viewer.prototype.setState = function (state, target) {
         if (typeof (state) == 'undefined' || !(state >= 225 && state <= 255))
             throw 'State has to be defined as 225 - 255. Use xState enum.';
-        this._handles.forEach(function (handle) {
-            handle.setState(state, target);
-        });
+        if (target[0].constructor !== Array) {
+            this._handles.forEach(function (handle) {
+                handle.setState(state, target);
+            });
+        }
+        else {
+            for (var i = 0; i < this._handles.length; i++) {
+                this._handles[i].setState(state, target[i + 1]);
+            }
+        }
         this._stylingChanged = true;
     };
     /**
@@ -647,7 +661,7 @@ var Viewer = (function () {
         if (typeof (model) != 'string' && !(model instanceof Blob))
             throw 'Model has to be specified either as a URL to wexBIM file or Blob object representing the wexBIM file.';
         var viewer = this;
-        var geometry = new model_geometry_1.ModelGeometry();
+        var geometry = new model_geometry_1.ModelGeometry(model_handle_1.ModelHandle.instancesNum + 1);
         geometry.onloaded = function () {
             viewer.addHandle(geometry, tag);
         };
@@ -781,6 +795,7 @@ var Viewer = (function () {
         var startY = null;
         var button = 'L';
         var id = -1;
+        var pickedModelId = -1;
         //set initial conditions so that different gestures can be identified
         var handleMouseDown = function (event) {
             mouseDown = true;
@@ -793,7 +808,9 @@ var Viewer = (function () {
             var viewX = startX - r.left;
             var viewY = viewer._height - (startY - r.top);
             //this is for picking
-            id = viewer.getID(viewX, viewY);
+            var fullId = viewer.getID(viewX, viewY);
+            id = fullId & 0x00FFFFFF;
+            pickedModelId = fullId >> 24;
             /**
             * Occurs when mousedown event happens on underlying canvas.
             *
@@ -842,7 +859,7 @@ var Viewer = (function () {
                 * @param {Number} id - product ID of the element or null if there wasn't any product under mouse
                 */
                 if (!handled)
-                    viewer.fire('pick', { id: id });
+                    viewer.fire('pick', { id: id, pickedModelId: pickedModelId });
             }
             viewer.enableTextSelection();
         };
@@ -1432,7 +1449,7 @@ var Viewer = (function () {
         //decode ID (bit shifting by multiplication)
         var hasValue = result[3] != 0; //0 transparency is only for no-values
         if (hasValue) {
-            var id = result[0] + result[1] * 256 + result[2] * 256 * 256;
+            var id = result[0] + result[1] * 256 + result[2] * 256 * 256 + result[3] * 256 * 256 * 256;
             var handled = false;
             this._plugins.forEach(function (plugin) {
                 if (!plugin.onBeforeGetId) {
@@ -1846,6 +1863,7 @@ var ModelPointers = (function () {
         this.NormalAttrPointer = gl.getAttribLocation(program, 'aNormal');
         this.IndexlAttrPointer = gl.getAttribLocation(program, 'aVertexIndex');
         this.ProductAttrPointer = gl.getAttribLocation(program, 'aProduct');
+        this.ModelIdAttrPointer = gl.getAttribLocation(program, 'aModelId');
         this.StateAttrPointer = gl.getAttribLocation(program, 'aState');
         this.StyleAttrPointer = gl.getAttribLocation(program, 'aStyleIndex');
         this.TransformationAttrPointer = gl.getAttribLocation(program, 'aTransformationIndex');
@@ -1860,6 +1878,7 @@ var ModelPointers = (function () {
         gl.enableVertexAttribArray(this.NormalAttrPointer);
         gl.enableVertexAttribArray(this.IndexlAttrPointer);
         gl.enableVertexAttribArray(this.ProductAttrPointer);
+        gl.enableVertexAttribArray(this.ModelIdAttrPointer);
         gl.enableVertexAttribArray(this.StateAttrPointer);
         gl.enableVertexAttribArray(this.StyleAttrPointer);
         gl.enableVertexAttribArray(this.TransformationAttrPointer);

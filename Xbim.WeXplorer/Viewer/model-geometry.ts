@@ -8,10 +8,13 @@ export class ModelGeometry {
     normals: Uint8Array;
     indices: Float32Array;
     products: Float32Array;
+    modelIds: Float32Array;
     transformations: Float32Array;
     styleIndices: Uint16Array;
     states: Uint8Array;
     //this is the only array we need to keep alive on client side to be able to change appearance of the model
+
+    model_id = -1;
 
     //these will be sent to GPU as the textures
     vertices: Float32Array;
@@ -28,6 +31,10 @@ export class ModelGeometry {
     //	bBox: Float32Array(6),
     //	spans: [Int32Array([int, int]),Int32Array([int, int]), ...] //spanning indexes defining shapes of product and it's state
     //};
+
+    constructor(model_id?: number) {
+        if (model_id) this.model_id = model_id
+    }  
 
     public productMaps: { [id: number]: ProductMap; } = {};
     public regions: Region[];
@@ -72,6 +79,7 @@ export class ModelGeometry {
         this.styleIndices = new Uint16Array(numTriangles * 3);
         this.styles = new Uint8Array(square(1, (numStyles + 1) * 4)); //+1 is for a default style
         this.products = new Float32Array(numTriangles * 3);
+        this.modelIds = new Float32Array(numTriangles * 3);
         this.states = new Uint8Array(numTriangles * 3 * 2); //place for state and restyling
         this.transformations = new Float32Array(numTriangles * 3);
         this.matrices = new Float32Array(square(4, numMatrices * 16));
@@ -202,6 +210,7 @@ export class ModelGeometry {
                 for (var i = 0; i < shapeGeom.indices.length; i++) {
                     this.indices[iIndex] = shapeGeom.indices[i] + iVertex / 3;
                     this.products[iIndex] = shape.pLabel;
+                    this.modelIds[iIndex] = this.model_id;
                     this.styleIndices[iIndex] = shape.style;
                     this.transformations[iIndex] = shape.transform;
                     this.states[2 * iIndex] = state; //set state

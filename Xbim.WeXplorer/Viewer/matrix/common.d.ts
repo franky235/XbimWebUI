@@ -4,7 +4,7 @@
  */
 export declare class glMatrix {
     static EPSILON: number;
-    static ARRAY_TYPE: Float32ArrayConstructor | ArrayConstructor;
+    static ARRAY_TYPE: ArrayConstructor | Float32ArrayConstructor;
     static RANDOM: () => number;
     static ENABLE_SIMD: boolean;
     static SIMD_AVAILABLE: boolean;

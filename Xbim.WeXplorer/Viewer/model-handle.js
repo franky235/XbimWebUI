@@ -33,6 +33,7 @@ var ModelHandle = (function () {
         this._normalBuffer = gl.createBuffer();
         this._indexBuffer = gl.createBuffer();
         this._productBuffer = gl.createBuffer();
+        this._modelIdBuffer = gl.createBuffer();
         this._styleBuffer = gl.createBuffer();
         this._stateBuffer = gl.createBuffer();
         this._transformationBuffer = gl.createBuffer();
@@ -53,6 +54,16 @@ var ModelHandle = (function () {
             this.region.bbox = new Float32Array([0.0, 0.0, 0.0, 10 * model.meter, 10 * model.meter, 10 * model.meter]);
         }
     }
+    Object.defineProperty(ModelHandle, "instancesNum", {
+        get: function () {
+            return ModelHandle._instancesNum;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ModelHandle.resetInstancesNum = function () {
+        ModelHandle._instancesNum = 0;
+    };
     //this function sets this model as an active one
     //it needs an argument 'pointers' which contains pointers to
     //shader attributes and uniforms which are to be set.
@@ -83,6 +94,8 @@ var ModelHandle = (function () {
         gl.vertexAttribPointer(pointers.IndexlAttrPointer, 1, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, this._productBuffer);
         gl.vertexAttribPointer(pointers.ProductAttrPointer, 1, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._modelIdBuffer);
+        gl.vertexAttribPointer(pointers.ModelIdAttrPointer, 1, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, this._stateBuffer);
         gl.vertexAttribPointer(pointers.StateAttrPointer, 2, gl.UNSIGNED_BYTE, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, this._styleBuffer);
@@ -158,6 +171,7 @@ var ModelHandle = (function () {
         gl.deleteBuffer(this._normalBuffer);
         gl.deleteBuffer(this._indexBuffer);
         gl.deleteBuffer(this._productBuffer);
+        gl.deleteBuffer(this._modelIdBuffer);
         gl.deleteBuffer(this._styleBuffer);
         gl.deleteBuffer(this._stateBuffer);
         gl.deleteBuffer(this._transformationBuffer);
@@ -172,6 +186,7 @@ var ModelHandle = (function () {
         this.bufferData(this._normalBuffer, model.normals);
         this.bufferData(this._indexBuffer, model.indices);
         this.bufferData(this._productBuffer, model.products);
+        this.bufferData(this._modelIdBuffer, model.modelIds);
         this.bufferData(this._stateBuffer, model.states);
         this.bufferData(this._transformationBuffer, model.transformations);
         this.bufferData(this._styleBuffer, model.styleIndices);
@@ -376,11 +391,11 @@ var ModelHandle = (function () {
         //buffer data to GPU
         this.bufferData(this._stateBuffer, this.model.states);
     };
+    /**
+     * Static counter to keep unique ID of the model handles
+     */
+    ModelHandle._instancesNum = 0;
     return ModelHandle;
 }());
-/**
- * Static counter to keep unique ID of the model handles
- */
-ModelHandle._instancesNum = 0;
 exports.ModelHandle = ModelHandle;
 //# sourceMappingURL=model-handle.js.map

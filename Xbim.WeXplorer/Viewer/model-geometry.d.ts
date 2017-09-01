@@ -4,13 +4,16 @@ export declare class ModelGeometry {
     normals: Uint8Array;
     indices: Float32Array;
     products: Float32Array;
+    modelIds: Float32Array;
     transformations: Float32Array;
     styleIndices: Uint16Array;
     states: Uint8Array;
+    model_id: number;
     vertices: Float32Array;
     matrices: Float32Array;
     styles: Uint8Array;
     meter: number;
+    constructor(model_id?: number);
     productMaps: {
         [id: number]: ProductMap;
     };

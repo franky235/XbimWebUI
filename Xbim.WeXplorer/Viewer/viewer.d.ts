@@ -82,6 +82,11 @@ export declare class Viewer {
     private _pMatrix;
     private _pointers;
     /**
+    * reset ModelHandle._instancesNum when necessary
+    * @function Viewer.resetInstancesNum
+    */
+    resetInstancesNum(): void;
+    /**
     * This is a static function which should always be called before Viewer is instantiated.
     * It will check all prerequisites of the viewer and will report all issues. If Prerequisities.errors contain
     * any messages viewer won't work. If Prerequisities.warnings contain any messages it will work but some
@@ -373,6 +378,7 @@ export declare class ModelPointers {
     NormalAttrPointer: number;
     IndexlAttrPointer: number;
     ProductAttrPointer: number;
+    ModelIdAttrPointer: number;
     StateAttrPointer: number;
     StyleAttrPointer: number;
     TransformationAttrPointer: number;

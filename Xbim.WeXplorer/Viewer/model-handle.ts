@@ -32,6 +32,7 @@ export class ModelHandle {
     private _normalBuffer: WebGLBuffer;
     private _indexBuffer: WebGLBuffer;
     private _productBuffer: WebGLBuffer;
+    private _modelIdBuffer: WebGLBuffer;
     private _styleBuffer: WebGLBuffer;
     private _stateBuffer: WebGLBuffer;
     private _transformationBuffer: WebGLBuffer;
@@ -72,6 +73,7 @@ export class ModelHandle {
         this._normalBuffer = gl.createBuffer();
         this._indexBuffer = gl.createBuffer();
         this._productBuffer = gl.createBuffer();
+        this._modelIdBuffer = gl.createBuffer();
         this._styleBuffer = gl.createBuffer();
         this._stateBuffer = gl.createBuffer();
         this._transformationBuffer = gl.createBuffer();
@@ -99,6 +101,13 @@ export class ModelHandle {
      * Static counter to keep unique ID of the model handles
      */
     private static _instancesNum = 0;
+    public static get instancesNum(): number {
+        return ModelHandle._instancesNum;
+    }
+    public static resetInstancesNum()  {
+        ModelHandle._instancesNum=0;
+    }
+
 
     //this function sets this model as an active one
     //it needs an argument 'pointers' which contains pointers to
@@ -135,6 +144,9 @@ export class ModelHandle {
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this._productBuffer);
         gl.vertexAttribPointer(pointers.ProductAttrPointer, 1, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._modelIdBuffer);
+        gl.vertexAttribPointer(pointers.ModelIdAttrPointer, 1, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this._stateBuffer);
         gl.vertexAttribPointer(pointers.StateAttrPointer, 2, gl.UNSIGNED_BYTE, false, 0, 0);
@@ -230,6 +242,7 @@ export class ModelHandle {
         gl.deleteBuffer(this._normalBuffer);
         gl.deleteBuffer(this._indexBuffer);
         gl.deleteBuffer(this._productBuffer);
+        gl.deleteBuffer(this._modelIdBuffer);
         gl.deleteBuffer(this._styleBuffer);
         gl.deleteBuffer(this._stateBuffer);
         gl.deleteBuffer(this._transformationBuffer);
@@ -247,6 +260,7 @@ export class ModelHandle {
         this.bufferData(this._normalBuffer, model.normals);
         this.bufferData(this._indexBuffer, model.indices);
         this.bufferData(this._productBuffer, model.products);
+        this.bufferData(this._modelIdBuffer, model.modelIds);
         this.bufferData(this._stateBuffer, model.states);
         this.bufferData(this._transformationBuffer, model.transformations);
         this.bufferData(this._styleBuffer, model.styleIndices);

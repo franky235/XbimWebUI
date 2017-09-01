@@ -5,17 +5,21 @@ var triangulated_shape_1 = require("./triangulated-shape");
 var state_1 = require("./state");
 var product_type_1 = require("./product-type");
 var ModelGeometry = (function () {
-    function ModelGeometry() {
+    //this will be used to change appearance of the objects
+    //map objects have a format: 
+    //map = {
+    //	productID: int,
+    //	type: int,
+    //	bBox: Float32Array(6),
+    //	spans: [Int32Array([int, int]),Int32Array([int, int]), ...] //spanning indexes defining shapes of product and it's state
+    //};
+    function ModelGeometry(model_id) {
+        //this is the only array we need to keep alive on client side to be able to change appearance of the model
+        this.model_id = -1;
         this.meter = 1000;
-        //this will be used to change appearance of the objects
-        //map objects have a format: 
-        //map = {
-        //	productID: int,
-        //	type: int,
-        //	bBox: Float32Array(6),
-        //	spans: [Int32Array([int, int]),Int32Array([int, int]), ...] //spanning indexes defining shapes of product and it's state
-        //};
         this.productMaps = {};
+        if (model_id)
+            this.model_id = model_id;
     }
     ModelGeometry.prototype.parse = function (binReader) {
         var _this = this;
@@ -60,6 +64,7 @@ var ModelGeometry = (function () {
         this.styleIndices = new Uint16Array(numTriangles * 3);
         this.styles = new Uint8Array(square(1, (numStyles + 1) * 4)); //+1 is for a default style
         this.products = new Float32Array(numTriangles * 3);
+        this.modelIds = new Float32Array(numTriangles * 3);
         this.states = new Uint8Array(numTriangles * 3 * 2); //place for state and restyling
         this.transformations = new Float32Array(numTriangles * 3);
         this.matrices = new Float32Array(square(4, numMatrices * 16));
@@ -172,6 +177,7 @@ var ModelGeometry = (function () {
                 for (var i = 0; i < shapeGeom.indices.length; i++) {
                     _this.indices[iIndex] = shapeGeom.indices[i] + iVertex / 3;
                     _this.products[iIndex] = shape.pLabel;
+                    _this.modelIds[iIndex] = _this.model_id;
                     _this.styleIndices[iIndex] = shape.style;
                     _this.transformations[iIndex] = shape.transform;
                     _this.states[2 * iIndex] = state; //set state
